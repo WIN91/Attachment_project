@@ -1,0 +1,22 @@
+{
+    "contents" : "",
+    "created" : 1437975713249.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "168148EF",
+    "lastKnownWriteTime" : 942760759,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "caption" : "admissions",
+        "contentUrl" : "content?title=admissions&file=65420b6e5459482492487c184d3d9053.htm",
+        "displayedObservations" : 1000,
+        "displayedVariables" : 10,
+        "totalObservations" : 59109,
+        "variables" : 10
+    },
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

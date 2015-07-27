@@ -1,0 +1,148 @@
+---
+title: "**Admissions Data**"
+author: "**Winnie Kadzo Yaa**"
+date: "Thursday, July 16, 2015"
+theme: "Warsaw"
+colortheme: "dolphin"
+fonttheme: "structurebold"
+highlight: tango
+fontsize: 10pt
+output: beamer_presentation
+---
+
+## *SYNOPSIS*
+
+This is a presentation on the analysis I made on the admissions data. This data was mostly comprised of dates i.e. the date of birth and admission of the patients, the date of discharge, the serial and PID no. of the patients.
+In order to work with dates I first changed the date formats using functions found in R.
+Thereafter I generated quite number of graphs and summaries but we will take a look at the general admissions graphs against age groups and also against the months patients were admitted.
+
+---
+
+## *Data analysis*
+- The data was analysed using the R software. Document, tables and graphs were also generated using R.
+
+## *R packages used in the analysis:*
+- Plyr: Has a set of tools for a common set of problems. Used to split up a big data structure into homogeneous pieces, apply a function to each piece and then combine all the results back together. For example, calculate summary statistics for each group.  
+- dplyr: This is a data manipulation package containing different functions like select(),filter(),mutate(),sort(),arrange() and distict().
+- lubridate: This is an R package that makes dealing with dates faster. Since the data that I was working on was mostly in dates format hence the need to change the formats.
+- ggplot2: This is a package that contains graphics used for data presentation.
+
+---
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+library(plyr)
+library(dplyr)
+library(lubridate)
+```
+*Changed the date format and obtained the age by getting the difference between the date of admissions and the date of birth.*
+```{r,echo=FALSE,message=FALSE,message=FALSE}
+admissions_data<-read.csv("~/AProject/admissions_data.csv")
+admissions<-tbl_df(admissions_data)
+```
+
+```{r}
+admissions$date_of_birth2<-as.Date(admissions$date_of_birth,
+                                   format='%d/%m/%Y')
+admissions$date_admn<-as.Date(admissions$date_admn,
+                              format='%d/%m/%Y')
+admissions$age_yrs <- as.integer((admissions$date_admn-
+                            admissions$date_of_birth2)/365.25)
+```
+
+
+*I created 5 categories of age groups ie."Under 1yr","1-5yrs","6-10yrs","11-15yrs"and"16-20yrs"* 
+```{r}
+
+admissions$age_cat[admissions$age_yrs<1]<-0
+admissions$age_cat[admissions$age_yrs>=1&
+                     admissions$age_yrs<=5]<-1
+admissions$age_cat[admissions$age_yrs>=6&
+                     admissions$age_yrs<=10]<-2
+admissions$age_cat[admissions$age_yrs>=11&
+                     admissions$age_yrs<=15]<-3
+admissions$age_cat[admissions$age_yrs>=16&
+                     admissions$age_yrs<=20]<-4 
+```
+
+```{r}
+admissions$age_cat<-factor(admissions$age_cat,labels=c("Under 1yr","1-5yrs",
+                                                       "6-10yrs",
+                                   "11-15yrs","16-20yrs"),ordered=TRUE) 
+```
+----
+
+# *Below is a table and graph of general admissions aganist age groups.* 
+
+```{r,comment=NA}
+table(admissions$age_cat)
+```
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+library(ggplot2)
+```
+---
+
+```{r,echo=FALSE}
+
+c<-ggplot(admissions[!is.na(admissions$age_cat),],aes(factor(age_cat)))
+c<-c+geom_bar()
+c<-c+geom_bar(fill="limegreen",colour="blue")
+c<-c+labs(x="AGE GROUP",y="ADMISSIONS COUNT")
+c<-c+ggtitle("**Admissions according to Age Group**")
+c
+```
+
+---
+
+## *Below is a table and a graph of general admissions count aganist months of the year.* 
+```{r,results='hide'}
+admissions$mnth1<- month(admissions$date_admn)
+admissions$mnth1<- factor(admissions$mnth1,
+              labels=c("Jan","Feb","Mar","Apr","May","Jun"
+     ,"Jul","Aug","Sep","Oct","Nov","Dec"),ordered=TRUE)
+```
+```{r,comment=NA}
+table(admissions$mnth1)
+```
+
+---
+
+```{r,echo=FALSE}
+a<-ggplot(admissions, aes(factor(mnth1)))
+a<-a +geom_bar()
+a<-a + geom_bar(fill="blue", colour="pink")
+a<-a+labs(x="MONTHS",y="ADMISSIONS COUNT")
+a<-a+ggtitle("**General Monthly Admissions**")
+a<-a+theme_grey()
+a<-a+coord_flip()
+a
+```
+
+---
+
+
+## *Summary*
+ - Based on the graph and table of admissions count against age group, it is noted that the "1-5"yrs age group recorded the highest number of admissions while the least admitted age group was that of"16-20"yrs.
+ - From the table and graph of admissions count against months of the year, its clear that the month of January experienced the highest patients turnout most of them from the"1-5"yrs age group while September had the least number of patients admissions.
+ - I also noted that there was  a slight increase in admissions from the months of May to July and this increase was noted in the"1-5"yrs age group.
+ 
+ 
+## *Assumptions.*
+- High admissions in the month of January especially the 1-5yrs age group may be as a result of the high temperatures during this month.
+- The slight increase in admissions  from the months of May to July  may be assumed to be due to the cold and rainy weather conditions experienced during these times of the year(malaria,pneumonia).
+
+
+---
+## *Acknowledgement*
+##*Supervisors*
+-  Greg Fegan
+-  Kennedy Mwai
+
+###*Fellow attaches*
+
+- Esther.D
+- Dan .N
+- Kelvin.C
+- Shaha.M
+
+#### *IT Department*
+
+
